@@ -53,8 +53,8 @@ def p2(file_path):
 
 
 if __name__ == '__main__':
-    # p1("day2/data/test1")
-    p1("day2/data/input")
-    p2("day2/data/input")
-    # p2("day2/data/test1")
+    # p1("day2/test1")
+    p1("day2/input")
+    p2("day2/input")
+    # p2("day2/test1")
     

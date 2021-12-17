@@ -4,7 +4,7 @@
 
 def p1():
     
-    with open("day1/data/input") as fp_in:
+    with open("day1/input") as fp_in:
 
         lines = fp_in.read().split("\n")
 
@@ -47,6 +47,6 @@ def p2(file_path):
 
 if __name__ == '__main__':
     p1()
-    p2("day1/data/input")
-    p2("day1/data/test2")
+    p2("day1/input")
+    p2("day1/test2")
     
