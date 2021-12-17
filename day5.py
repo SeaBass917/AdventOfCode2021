@@ -5,112 +5,74 @@ def p1(file_path, d_type="Answer"):
     
     with open(file_path) as fp_in:
 
-        chunks = fp_in.read().split("\n\n")
+        coord_pairs = [[[int(s) for s in coord.split(",")] for coord in line.split(" -> ")] for line in fp_in.read().split("\n")]
 
-        numbers = [int(num) for num in chunks[0].split(",")]
-        boards = [utils.parse_grid(board_str, t=utils.Number) for board_str in chunks[1:]]
+        # Make the grid a square
+        grid_len = max(np.array(coord_pairs).flatten()) + 1
+        grid = np.zeros((grid_len, grid_len), dtype=int)
 
-        # Loop through the numbers and boards to mark the bingos
-        is_winner = False
-        for number in numbers:
+        for (x1, y1), (x2, y2) in coord_pairs:
+            
+            # Draw the line
+            if(x1 == x2):
+                for y in range(min(y1, y2), max(y1, y2)+1):
+                    grid[y][x1] += 1
 
-            # Mark all the boards
-            for board in boards:
+            if(y1 == y2):
+                for x in range(min(x1, x2), max(x1, x2)+1):
+                    grid[y1][x] += 1
 
-                # Mark the board
-                for row in board:
-                    for num in row:
-                        if num._val == number:
-                            num._val = num._val | MASK
-
-                # Determine if the board is a winner
-                
-                # ROWS
-                for row in board:
-                    is_winner = is_winner or is_set_bingo_winner(row)
-                
-                # COLS
-                for col in np.transpose(board):
-                    is_winner = is_winner or is_set_bingo_winner(col)
-
-                # # DIAG 1
-                # is_winner = is_set_bingo_winner(np.diag(board))
-
-                # # DIAG 2
-                # is_winner = is_set_bingo_winner(np.diag(np.flipud(board)))
-
-                # 
-                if is_winner:
-                    # print(number)
-                    # utils.Number.print_grid(board)
-                    score_winner = calc_bingo_score(board, number)
-
-                    print(f"{d_type}) {score_winner}")
-                    break
-
-            if is_winner: break
-
+        count = 0
+        for num in grid.flatten():
+            if 1 < num:
+                count += 1
+        
+        print(f"{d_type}) {count}")
         return
         
 def p2(file_path, d_type="Answer"):
     
     with open(file_path) as fp_in:
 
-        chunks = fp_in.read().split("\n\n")
+        coord_pairs = [[[int(s) for s in coord.split(",")] for coord in line.split(" -> ")] for line in fp_in.read().split("\n")]
 
-        numbers = [int(num) for num in chunks[0].split(",")]
-        boards = [utils.parse_grid(board_str, t=utils.Number) for board_str in chunks[1:]]
+        # Make the grid a square
+        grid_len = max(np.array(coord_pairs).flatten()) + 1
+        grid = np.zeros((grid_len, grid_len), dtype=int)
 
-        # Keep a list of winning boards
-        win_table = [ False for _ in boards]
+        for (x1, y1), (x2, y2) in coord_pairs:
 
-        # Loop through the numbers and boards to mark the bingos
-        for number in numbers:
+            slope_n = (y2 - y1)
+            slope_d = (x2 - x1)
+            
+            # Draw the line
+            if slope_d == 0:
+                for y in range(min(y1, y2), max(y1, y2)+1):
+                    grid[y][x1] += 1
+
+            elif slope_n == 0:
+                for x in range(min(x1, x2), max(x1, x2)+1):
+                    grid[y1][x] += 1
+
+            else:
+
+                slope = slope_n / slope_d
                 
-            # Mark all the boards
-            for i, board in enumerate(boards):
-                is_winner = False
+                # We always draw left to righjt, 
+                # so make sure starting y is right
+                y = y2 if x2 < x1 else y1
 
-                # Mark the board
-                for row in board:
-                    for num in row:
-                        if num._val == number:
-                            num._val = num._val | MASK
+                for i, x in enumerate(range(min(x1, x2), max(x1, x2)+1)):
+                    grid[int(y+i*slope)][x] += 1
 
-                # Determine if the board is a winner
-                
-                # ROWS
-                for row in board:
-                    is_winner = is_winner or is_set_bingo_winner(row)
-                
-                # COLS
-                for col in np.transpose(board):
-                    is_winner = is_winner or is_set_bingo_winner(col)
-
-                # # DIAG 1
-                # is_winner = is_set_bingo_winner(np.diag(board))
-
-                # # DIAG 2
-                # is_winner = is_set_bingo_winner(np.diag(np.flipud(board)))
-
-                # 
-                if is_winner:
-                    # print(number)
-                    # utils.Number.print_grid(board)
-                    # if win_table[i] == False: print(f"Board {i} just won.")
-                    
-                    win_table[i] = True
-
-                    if all(win_table):
-
-                        score_winner = calc_bingo_score(board, number)
-
-                        print(f"{d_type}) {score_winner}")
-                        break
-
-            if all(win_table): break
-
+        count = 0
+        for num in grid.flatten():
+            if 1 < num:
+                count += 1
+        
+        print(f"{d_type}) {count}")
         return
+        
         
 
 if __name__ == '__main__':
