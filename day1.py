@@ -48,5 +48,5 @@ def p2(file_path):
 if __name__ == '__main__':
     p1()
     p2("day1/input")
-    p2("day1/test2")
+    p2("day1/test1")
     
