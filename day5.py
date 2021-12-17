@@ -1,25 +1,6 @@
 import numpy as np
 from utils import utils
 
-MASK = 0x80000000
-
-def is_set_bingo_winner(it : list):
-    return all([MASK == (MASK & ele._val) for ele in it])
-
-def calc_bingo_score(board : list, num_last : int):
-    
-    score = 0
-
-    # Get sum of all unmarked numbers
-    for row in board:
-        for num in row:
-            if (num._val & MASK) != MASK:
-                score += num._val 
-
-    score *= num_last
-    
-    return score
-
 def p1(file_path, d_type="Answer"):
     
     with open(file_path) as fp_in:
