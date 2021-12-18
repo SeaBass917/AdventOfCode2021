@@ -10,17 +10,20 @@ class Number():
         self._val = int(num)
 
     @staticmethod
-    def print_grid(grid: list):
+    def print_grid(grid: list, base="3.0d"):
+        s = ""
         for row in grid:
-            for num in row:
-                print("%8.0x, "%(num._val), end="")
-            print()
+            for num in (row):
+                s += f"%{base}, "%(num._val)
+            s = s[:-2] + "\n"
+        print(s)
 
     @staticmethod
-    def print_list(it: list):
+    def print_list(it: list, base="3.0d"):
+        s = ""
         for num in it:
-            print("%8.0x, "%(num._val), end="")
-        print()
+            s += f"%{base}, "%(num._val)
+        print(s[:-2])
 
 
 def base_cnvrt(digits, base=2):
